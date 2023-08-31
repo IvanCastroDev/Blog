@@ -2,7 +2,7 @@
 title: 'Blog Service'
 ---
 
-# Servicio de colas con redis
+# Servicio CRUD
 ###### tags: `microservices` `Blog`
 
 ## Documentación Extra
