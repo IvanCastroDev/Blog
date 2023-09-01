@@ -9,9 +9,11 @@ dotenv.config();
 
 export const singupUser = async (request, response) => {
     try {
-        // const salt = await bcrypt.genSalt();
-        // const hashedPassword = await bcrypt.hash(request.body.password, salt);
         const hashedPassword = await bcrypt.hash(request.body.password, 10);
+
+        if (await User.findOne({username: request.body.username})) {
+            return response.status(400).json({ msg: 'Username already exist' });
+        }
 
         const user = { username: request.body.username, name: request.body.name, password: hashedPassword }
 

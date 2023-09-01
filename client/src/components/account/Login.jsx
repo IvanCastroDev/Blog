@@ -34,12 +34,6 @@ const Wrapper = styled(Box)`
     }
 `;
 
-const icon = styled(InputAdornment)`
-    ::hover {
-        cursor: pointer;
-    }
-`;
-
 const LoginButton = styled(Button)`
     text-transform: none;
     background: #FB641B;
@@ -70,6 +64,14 @@ const Error = styled(Typography)`
     font-weight: 600;
 `
 
+const Msg = styled(Typography)`
+    font-size: 10px;
+    color: #33FF42;
+    line-height: 0;
+    margin-top: 10px;
+    font-weight: 600;
+`
+
 const loginInitialValues = {
     username: '',
     password: ''
@@ -87,11 +89,10 @@ const Login = ({ isUserAuthenticated }) => {
     const [error, showError] = useState('');
     const [account, toggleAccount] = useState('login');
     const [seePass, setSeePass] = useState(false);
+    const [message, showMessage] = useState("");
 
     const navigate = useNavigate();
     const { setAccount } = useContext(DataContext);
-
-    const imageURL = 'https://www.sesta.it/wp-content/uploads/2021/03/logo-blog-sesta-trasparente.png';
 
     useEffect(() => {
         showError(false);
@@ -130,10 +131,11 @@ const Login = ({ isUserAuthenticated }) => {
         let response = await API.userSignup(signup);
         if (response.isSuccess) {
             showError('');
+            showMessage(response.msg);
             setSignup(signupInitialValues);
             toggleAccount('login');
         } else {
-            showError('Something went wrong! please try again later');
+            showError(response.msg ? response.msg :'Something went wrong! please try again later');
         }
     }
 
@@ -184,6 +186,8 @@ const Login = ({ isUserAuthenticated }) => {
                                         }}
                                         variant="outlined" type={seePass ?  "text" : "password"} value={signup.password}  onChange={(e) => onInputChange(e)} name='password' label='Enter Password' />
 
+                            {error && <Error>{error}</Error>}
+                            {message && <Msg>{message}</Msg>}
                             <SignupButton onClick={() => signupUser()} >Signup</SignupButton>
                             <Text style={{ textAlign: 'center' }}>OR</Text>
                             <LoginButton variant="contained" onClick={() => toggleSignup()}>Already have an account</LoginButton>
